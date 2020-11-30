@@ -69,15 +69,14 @@
 (define-minor-mode recursion-indicator-mode
   "Show the recursion level in the mode-line."
   :global t
-  (if recursion-indicator-mode
-      (progn
-        (add-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup)
-        (add-hook 'minibuffer-exit-hook #'recursion-indicator--minibuffer-exit)
-        (push '(recursion-indicator-mode (:eval (recursion-indicator--string))) mode-line-misc-info)
-        (setq recursion-indicator--cache nil))
-    (setq mode-line-misc-info (assq-delete-all 'recursion-indicator-mode mode-line-misc-info))
-    (remove-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup)
-    (remove-hook 'minibuffer-exit-hook #'recursion-indicator--minibuffer-exit)))
+  (setq mode-line-misc-info (assq-delete-all 'recursion-indicator-mode mode-line-misc-info))
+  (remove-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup)
+  (remove-hook 'minibuffer-exit-hook #'recursion-indicator--minibuffer-exit)
+  (when recursion-indicator-mode
+    (add-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup)
+    (add-hook 'minibuffer-exit-hook #'recursion-indicator--minibuffer-exit)
+    (push '(recursion-indicator-mode (:eval (recursion-indicator--string))) mode-line-misc-info)
+    (setq recursion-indicator--cache nil)))
 
 (provide 'recursion-indicator)
 ;;; recursion-indicator.el ends here
