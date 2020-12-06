@@ -28,25 +28,15 @@
 
 ;;; Code:
 
-(defgroup recursion-indicator nil
-  "Recursion indicator for the mode line."
-  :group 'convenience)
-
-(defface recursion-indicator-minibuffer
-  '((t :inherit (font-lock-keyword-FACE mode-line) :weight normal))
-  "Face used for the arrow indicating minibuffer recursion."
-  :group 'recursion-indicator)
-
-(defface recursion-indicator-general
-  '((t :inherit (font-lock-constant-face mode-line) :weight normal))
-  "Face used for the arrow indicating general recursion."
-  :group 'recursion-indicator)
-
 (defvar recursion-indicator--minibuffer nil
   "Minibuffer depths.")
 
 (defvar recursion-indicator--cache nil
   "Cached recursion indicator.")
+
+(defsubst recursion-indicator--colorize (str font)
+  "Colorize status string STR. Take color from FONT."
+  (propertize str 'face `(:foreground ,(face-attribute font :foreground))))
 
 (defun recursion-indicator--string ()
   "Recursion indicator string."
@@ -57,8 +47,8 @@
       (dotimes (i depth)
         (setq str (concat
                    (if (memq (1+ i) recursion-indicator--minibuffer)
-                       (propertize "↲" 'face 'recursion-indicator-minibuffer)
-                     (propertize "⟲" 'face 'recursion-indicator-general))
+                       (recursion-indicator--colorize "↲" 'font-lock-warning-face)
+                     (recursion-indicator--colorize "⟲" 'font-lock-constant-face))
                    str)))
       (when str
         (setq str (propertize (concat "[" str "] ") 'help-echo "Recursive edit, type C-M-c to get out")))
