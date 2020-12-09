@@ -1,5 +1,7 @@
 # recursion-indicator.el - Recursion level indicator in the mode-line
 
+[![](https://melpa.org/packages/recursion-indicator-badge.svg)](https://melpa.org/#/recursion-indicator)
+
 ![recursion-indicator](https://github.com/minad/recursion-indicator/blob/master/recursion-indicator.png?raw=true)
 
 This simple library shows the current recursion level in the mode-line.
