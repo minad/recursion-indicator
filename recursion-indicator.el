@@ -34,13 +34,11 @@
 
 (defface recursion-indicator-minibuffer
   '((t :inherit 'font-lock-keyword-face :weight normal :height 0.9))
-  "Face used for the arrow indicating minibuffer recursion."
-  :group 'recursion-indicator)
+  "Face used for the arrow indicating minibuffer recursion.")
 
 (defface recursion-indicator-general
   '((t :inherit 'font-lock-constant-face :weight normal :height 0.9))
-  "Face used for the arrow indicating general recursion."
-  :group 'recursion-indicator)
+  "Face used for the arrow indicating general recursion.")
 
 (defvar recursion-indicator--minibuffer nil
   "Minibuffer depths.")
