@@ -40,7 +40,15 @@
   '((t :inherit 'font-lock-constant-face :weight normal :height 0.9))
   "Face used for the arrow indicating general recursion.")
 
-(defvar recursion-indicator--minibuffer nil
+(defcustom recursion-indicator-general "⟲"
+  "Arrow indicating general recursion."
+  :type 'string)
+
+(defcustom recursion-indicator-minibuffer "↲"
+  "Arrow indicating minibuffer recursion."
+  :type 'string)
+
+(defvar recursion-indicator--minibuffer-depths nil
   "Minibuffer depths.")
 
 (defvar recursion-indicator--cache nil
@@ -54,9 +62,9 @@
         (cdr recursion-indicator--cache)
       (dotimes (i depth)
         (setq str (concat
-                   (if (memq (1+ i) recursion-indicator--minibuffer)
-                       (propertize "↲" 'face 'recursion-indicator-minibuffer)
-                     (propertize "⟲" 'face 'recursion-indicator-general))
+                   (if (memq (1+ i) recursion-indicator--minibuffer-depths)
+                       (propertize recursion-indicator-minibuffer 'face 'recursion-indicator-minibuffer)
+                     (propertize recursion-indicator-general 'face 'recursion-indicator-general))
                    str)))
       (when str
         (setq str (propertize (concat "[" str "] ") 'help-echo "Recursive edit, type C-M-c to get out")))
@@ -65,12 +73,12 @@
 
 (defun recursion-indicator--minibuffer-setup ()
   "Minibuffer setup hook."
-  (push (recursion-depth) recursion-indicator--minibuffer)
+  (push (recursion-depth) recursion-indicator--minibuffer-depths)
   (setq recursion-indicator--cache nil))
 
 (defun recursion-indicator--minibuffer-exit ()
   "Minibuffer exit hook."
-  (pop recursion-indicator--minibuffer)
+  (pop recursion-indicator--minibuffer-depths)
   (setq recursion-indicator--cache nil))
 
 ;;;###autoload
