@@ -2,7 +2,7 @@
 
 [[https://melpa.org/#/recursion-indicator][file:https://melpa.org/packages/recursion-indicator-badge.svg]]
 
-#+CAPTION: recursion-indicator
+#+caption: recursion-indicator
 [[https://github.com/minad/recursion-indicator/blob/master/recursion-indicator.png?raw=true]]
 
 This simple library shows the current recursion level in the mode-line.
@@ -18,9 +18,9 @@ If you are using =recursion-indicator= you might want to remove =%[= and
 
 ** Usage
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package recursion-indicator
   :demand t
   :config
   (recursion-indicator-mode))
-#+END_SRC
+#+end_src
