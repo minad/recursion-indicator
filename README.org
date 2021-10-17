@@ -1,6 +1,7 @@
 * recursion-indicator.el - Recursion level indicator in the mode-line
 
-[[https://melpa.org/#/recursion-indicator][file:https://melpa.org/packages/recursion-indicator-badge.svg]]
+#+html: <a href="https://melpa.org/#/recursion-indicator"><img alt="MELPA" src="https://melpa.org/packages/recursion-indicator-badge.svg"/></a>
+#+html: <a href="https://stable.melpa.org/#/recursion-indicator"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/recursion-indicator-badge.svg"/></a>
 
 #+caption: recursion-indicator
 [[https://github.com/minad/recursion-indicator/blob/master/recursion-indicator.png?raw=true]]
