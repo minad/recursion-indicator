@@ -5,7 +5,7 @@
 #+html: <a href="https://stable.melpa.org/#/recursion-indicator"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/recursion-indicator-badge.svg"/></a>
 
 #+caption: recursion-indicator
-[[https://github.com/minad/recursion-indicator/blob/master/recursion-indicator.png?raw=true]]
+[[https://github.com/minad/recursion-indicator/blob/main/recursion-indicator.png?raw=true]]
 
 This simple library shows the current recursion level in the mode-line.
 For example if you =enable-recursive-minibuffers= and enter
