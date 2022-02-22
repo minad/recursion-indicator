@@ -1,5 +1,7 @@
 ;;; recursion-indicator.el --- Recursion indicator -*- lexical-binding: t -*-
 
+;; Copyright (C) 2020-2022 Daniel Mendler
+
 ;; Author: Daniel Mendler
 ;; Created: 2020
 ;; License: GPL-3.0-or-later
