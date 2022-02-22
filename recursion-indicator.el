@@ -74,7 +74,8 @@
 (defun recursion-indicator--minibuffer-setup ()
   "Minibuffer setup hook."
   (push (recursion-depth) recursion-indicator--minibuffer-depths)
-  (setq recursion-indicator--cache nil))
+  (setq recursion-indicator--cache nil)
+  (run-at-time 0 nil #'force-mode-line-update 'all))
 
 (defun recursion-indicator--minibuffer-exit ()
   "Minibuffer exit hook."
@@ -89,9 +90,7 @@
   (remove-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup)
   (remove-hook 'minibuffer-exit-hook #'recursion-indicator--minibuffer-exit)
   (when recursion-indicator-mode
-    ;; Use a high priority such that the indicator reflects the minibuffer recursion
-    ;; status even if Emacs is redisplayed in another minibuffer setup hook.
-    (add-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup -99)
+    (add-hook 'minibuffer-setup-hook #'recursion-indicator--minibuffer-setup)
     (add-hook 'minibuffer-exit-hook #'recursion-indicator--minibuffer-exit)
     (push '(recursion-indicator-mode (:eval (recursion-indicator--string))) mode-line-misc-info)
     (setq recursion-indicator--cache nil)))
