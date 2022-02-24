@@ -42,7 +42,7 @@
   '((t :inherit 'font-lock-constant-face :weight normal :height 0.9))
   "Face used for the arrow indicating general recursion.")
 
-(defcustom recursion-indicator-general "⟲"
+(defcustom recursion-indicator-general "↶"
   "Arrow indicating general recursion."
   :type 'string)
 
