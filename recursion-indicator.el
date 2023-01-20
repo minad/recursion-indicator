@@ -32,7 +32,9 @@
 
 (defgroup recursion-indicator nil
   "Recursion indicator for the mode line."
-  :group 'convenience)
+  :link '(url-link "https://github.com/minad/recursion-indicator")
+  :group 'convenience
+  :prefix "recursion-indicator-")
 
 (defface recursion-indicator-minibuffer
   '((t :inherit 'font-lock-keyword-face :weight normal :height 0.9))
