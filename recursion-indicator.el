@@ -32,7 +32,7 @@
 
 (defgroup recursion-indicator nil
   "Recursion indicator for the mode line."
-  :link '(url-link "https://github.com/minad/recursion-indicator")
+  :link '(url-link :tag "Homepage" "https://github.com/minad/recursion-indicator")
   :group 'convenience
   :prefix "recursion-indicator-")
 
