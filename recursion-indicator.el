@@ -55,8 +55,8 @@
   "Arrow indicating minibuffer recursion."
   :type 'string)
 
-(defvar recursion-indicator--mb-depths nil
-  "Minibuffer depths.")
+(defvar recursion-indicator--minibuffers nil
+  "Minibuffer depth and command alist.")
 
 (defvar recursion-indicator--cache nil
   "Cached recursion indicator.")
@@ -69,26 +69,32 @@
         (cdr recursion-indicator--cache)
       (dotimes (i depth)
         (setq str (concat
-                   (if (memq (1+ i) recursion-indicator--mb-depths)
-                       (propertize recursion-indicator-minibuffer 'face 'recursion-indicator-minibuffer)
-                     (propertize recursion-indicator-general 'face 'recursion-indicator-general))
+                   (if-let (mb (assq (1+ i) recursion-indicator--minibuffers))
+                       (propertize recursion-indicator-minibuffer
+                                   'face 'recursion-indicator-minibuffer
+                                   'help-echo (format "Minibuffer `%s'" (cdr mb)))
+                     (propertize recursion-indicator-general
+                                 'face 'recursion-indicator-general
+                                 'help-echo (format "Recursive edit %s" (1+ i))))
                    str)))
-      (when str
-        (setq str (propertize
-                   (concat "[" str "] ")
-                   'help-echo "Recursive edit, type C-M-c to get out")))
+      (when str (setq str (format
+                           (propertize " [%s] " 'help-echo (format "Recursion depth %s" depth))
+                           str)))
       (setq recursion-indicator--cache (cons depth str))
       str)))
 
 (defun recursion-indicator--mb-setup ()
   "Minibuffer setup hook."
-  (push (recursion-depth) recursion-indicator--mb-depths)
+  (push (cons (recursion-depth)
+              (if (and this-command (symbolp this-command))
+                  this-command 'unknown))
+        recursion-indicator--minibuffers)
   (setq recursion-indicator--cache nil)
   (run-at-time 0 nil #'force-mode-line-update 'all))
 
 (defun recursion-indicator--mb-exit ()
   "Minibuffer exit hook."
-  (pop recursion-indicator--mb-depths)
+  (pop recursion-indicator--minibuffers)
   (setq recursion-indicator--cache nil))
 
 (defun recursion-indicator-exit (arg)
@@ -102,7 +108,7 @@ the recursive editing session is left."
      (arg
       (message "Recursion depth: %s" (1+ depth))
       (save-window-excursion (recursive-edit)))
-     ((memq depth recursion-indicator--mb-depths)
+     ((assq depth recursion-indicator--minibuffers)
       (abort-recursive-edit))
      (t
       (when (> depth 0)
