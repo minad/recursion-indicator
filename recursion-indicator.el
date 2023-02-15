@@ -6,8 +6,8 @@
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Created: 2020
-;; Version: 0.3
-;; Package-Requires: ((emacs "27.1") (compat "29.1.3.0"))
+;; Version: 0.4
+;; Package-Requires: ((emacs "27.1") (compat "29.1.3.4"))
 ;; Homepage: https://github.com/minad/recursion-indicator
 
 ;; This file is not part of GNU Emacs.
