@@ -9,6 +9,7 @@
 ;; Version: 0.4
 ;; Package-Requires: ((emacs "27.1") (compat "29.1.3.4"))
 ;; Homepage: https://github.com/minad/recursion-indicator
+;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
 
