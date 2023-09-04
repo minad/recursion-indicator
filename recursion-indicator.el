@@ -41,20 +41,28 @@
   :group 'convenience
   :prefix "recursion-indicator-")
 
-(defface recursion-indicator-minibuffer
-  '((t :inherit 'font-lock-keyword-face :weight normal :height 0.9))
+(defface recursion-indicator-completion
+  '((t :inherit 'font-lock-variable-face))
+  "Face used for the arrow indicating completion recursion.")
+
+(defface recursion-indicator-prompt
+  '((t :inherit 'font-lock-keyword-face))
   "Face used for the arrow indicating minibuffer recursion.")
 
 (defface recursion-indicator-general
-  '((t :inherit 'font-lock-constant-face :weight normal :height 0.9))
+  '((t :inherit 'font-lock-constant-face))
   "Face used for the arrow indicating general recursion.")
 
-(defcustom recursion-indicator-general "↶"
-  "Arrow indicating general recursion."
+(defcustom recursion-indicator-general "R"
+  "Recursion indicator."
   :type 'string)
 
-(defcustom recursion-indicator-minibuffer "↲"
-  "Arrow indicating minibuffer recursion."
+(defcustom recursion-indicator-completion "C"
+  "Minibuffer completion indicator."
+  :type 'string)
+
+(defcustom recursion-indicator-prompt "P"
+  "Minibuffer prompt indicator."
   :type 'string)
 
 (defvar recursion-indicator--minibuffers nil
@@ -71,25 +79,32 @@
         (cdr recursion-indicator--cache)
       (dotimes (i depth)
         (setq str (concat
+                   str
                    (if-let (mb (assq (1+ i) recursion-indicator--minibuffers))
-                       (propertize recursion-indicator-minibuffer
-                                   'face 'recursion-indicator-minibuffer
-                                   'help-echo (format "Minibuffer `%s'" (cdr mb)))
+                       (if (buffer-local-value 'minibuffer-completion-table (caddr mb))
+                           (propertize recursion-indicator-completion
+                                       'face 'recursion-indicator-completion
+                                       'help-echo (format "%s: Completion `%s'" (1+ i) (cadr mb)))
+                         (propertize recursion-indicator-prompt
+                                     'face 'recursion-indicator-prompt
+                                     'help-echo (format "%s: Prompt `%s'" (1+ i) (cadr mb))))
                      (propertize recursion-indicator-general
                                  'face 'recursion-indicator-general
-                                 'help-echo (format "Recursive edit %s" (1+ i))))
-                   str)))
+                                 'help-echo (format "%s: Recursion" (1+ i)))))))
       (when str (setq str (format
-                           (propertize " [%s] " 'help-echo (format "Recursion depth %s" depth))
+                           (propertize " [%s] "
+                                       'help-echo (format "Recursion depth %s" depth)
+                                       'pointer 'arrow)
                            str)))
       (setq recursion-indicator--cache (cons depth str))
       str)))
 
 (defun recursion-indicator--mb-setup ()
   "Minibuffer setup hook."
-  (push (cons (recursion-depth)
+  (push (list (recursion-depth)
               (if (and this-command (symbolp this-command))
-                  this-command 'unknown))
+                  this-command 'unknown)
+              (current-buffer))
         recursion-indicator--minibuffers)
   (setq recursion-indicator--cache nil)
   (run-at-time 0 nil #'force-mode-line-update 'all))
