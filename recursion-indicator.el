@@ -49,6 +49,10 @@
   '((t :inherit font-lock-variable-face))
   "Face used for the arrow indicating minibuffer completion.")
 
+(defface recursion-indicator-suspend
+  '((t :inherit font-lock-builtin-face))
+  "Face used for the arrow indicating minibuffer suspend.")
+
 (defface recursion-indicator-prompt
   '((t :inherit font-lock-keyword-face))
   "Face used for the arrow indicating a minibuffer prompt.")
@@ -56,6 +60,7 @@
 (defcustom recursion-indicator-symbols
   '((completion "C" recursion-indicator-completion)
     (prompt     "P" recursion-indicator-prompt)
+    (suspend    "S" recursion-indicator-suspend)
     (t          "R" recursion-indicator-default))
   "Recursion indicator symbols."
   :type '(alist :key-type symbol :value-type (list string face)))
@@ -81,9 +86,11 @@
           (setq str (concat
                      str
                      (if-let (mb (assq (1+ i) recursion-indicator--minibuffers))
-                         (if (buffer-local-value 'minibuffer-completion-table (caddr mb))
-                             (recursion-indicator--symbol 'completion "%s: Completion `%s'" (1+ i) (cadr mb))
-                           (recursion-indicator--symbol 'prompt "%s: Prompt `%s'" (1+ i) (cadr mb)))
+                         (if (ignore-errors (buffer-local-value 'vertico-suspend--ov (caddr mb)))
+                             (recursion-indicator--symbol 'suspend "%s: Suspend `%s'" (1+ i) (cadr mb))
+                           (if (buffer-local-value 'minibuffer-completion-table (caddr mb))
+                               (recursion-indicator--symbol 'completion "%s: Completion `%s'" (1+ i) (cadr mb))
+                             (recursion-indicator--symbol 'prompt "%s: Prompt `%s'" (1+ i) (cadr mb))))
                        (recursion-indicator--symbol t "%s: Recursion" (1+ i))))))
         (when str
           (setq str (format
@@ -94,6 +101,10 @@
         (setq recursion-indicator--cache (cons depth str))))
     (cdr recursion-indicator--cache)))
 
+(defun recursion-indicator--flush ()
+  (setq recursion-indicator--cache nil)
+  (force-mode-line-update t))
+
 (defun recursion-indicator--mb-setup ()
   "Minibuffer setup hook."
   (push (list (recursion-depth)
@@ -101,13 +112,12 @@
                   this-command 'unknown)
               (current-buffer))
         recursion-indicator--minibuffers)
-  (setq recursion-indicator--cache nil)
-  (run-at-time 0 nil #'force-mode-line-update 'all))
+  (recursion-indicator--flush))
 
 (defun recursion-indicator--mb-exit ()
   "Minibuffer exit hook."
   (pop recursion-indicator--minibuffers)
-  (setq recursion-indicator--cache nil))
+  (recursion-indicator--flush))
 
 (defun recursion-indicator-exit (arg)
   "Enter recursive edit if prefix ARG is non-nil, otherwise exit.
@@ -137,9 +147,10 @@ the recursive editing session is left."
   "Show the recursion depth in the mode-line."
   :keymap recursion-indicator-map
   :global t
-  (setq recursion-indicator--cache nil)
+  (recursion-indicator--flush)
   (cond
    (recursion-indicator-mode
+    (advice-add 'vertico-suspend :after #'recursion-indicator--flush)
     ;; Use a high priority such that the indicator reflects the minibuffer recursion
     ;; status even if Emacs is redisplayed in another minibuffer setup hook.
     (add-hook 'minibuffer-setup-hook #'recursion-indicator--mb-setup -99)
@@ -147,6 +158,7 @@ the recursive editing session is left."
     (setf (alist-get 'recursion-indicator-mode mode-line-misc-info)
           '((:eval (recursion-indicator--string)))))
    (t
+    (advice-remove 'vertico-suspend #'recursion-indicator--flush)
     (remove-hook 'minibuffer-setup-hook #'recursion-indicator--mb-setup)
     (remove-hook 'minibuffer-exit-hook #'recursion-indicator--mb-exit)
     (setf (alist-get 'recursion-indicator-mode mode-line-misc-info nil t) nil))))
