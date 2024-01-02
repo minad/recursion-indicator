@@ -102,6 +102,7 @@
     (cdr recursion-indicator--cache)))
 
 (defun recursion-indicator--flush ()
+  "Flush mode line indicator."
   (setq recursion-indicator--cache nil)
   (force-mode-line-update t))
 
