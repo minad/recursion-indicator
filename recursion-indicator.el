@@ -1,6 +1,6 @@
 ;;; recursion-indicator.el --- Recursion indicator -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2023 Daniel Mendler
+;; Copyright (C) 2020-2024 Daniel Mendler
 
 ;; Author: Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
