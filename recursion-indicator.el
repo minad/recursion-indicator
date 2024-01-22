@@ -6,7 +6,7 @@
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Created: 2020
-;; Version: 1.0
+;; Version: 1.1
 ;; Package-Requires: ((emacs "27.1") (compat "29.1.4.4"))
 ;; Homepage: https://github.com/minad/recursion-indicator
 ;; Keywords: convenience
