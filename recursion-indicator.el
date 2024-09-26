@@ -4,11 +4,11 @@
 
 ;; Author: Daniel Mendler <mail@daniel-mendler.de>
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
-;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Created: 2020
 ;; Version: 1.1
 ;; Package-Requires: ((emacs "28.1") (compat "30"))
-;; Homepage: https://github.com/minad/recursion-indicator
+;; URL: https://github.com/minad/recursion-indicator
+;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
